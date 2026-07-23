@@ -7,6 +7,11 @@ def package(root):
             if re.search(r'AI|agent|generated|copilot|codex',txt,re.I):
                 files.append({'path':str(p.relative_to(root)).replace('\\','/'),'sha256':hashlib.sha256(txt.encode()).hexdigest()[:16],'evidence_lines':[i+1 for i,l in enumerate(txt.splitlines()) if re.search(r'AI|agent|generated|copilot|codex',l,re.I)][:10]})
     return {'evidence_files':files,'review_note':f"Found {len(files)} files with AI-change evidence markers."}
+def markdown(data):
+    lines=['## AI Change Evidence',data['review_note'],'','| File | Short hash | Evidence lines |','| --- | --- | --- |']
+    for f in data['evidence_files']:
+        lines.append(f"| `{f['path']}` | `{f['sha256']}` | {', '.join(map(str,f['evidence_lines']))} |")
+    return '\n'.join(lines)
 def main(argv=None):
-    ap=argparse.ArgumentParser(description='Build a compact evidence bundle for PRs containing AI-assisted changes.'); ap.add_argument('root'); ns=ap.parse_args(argv); print(json.dumps(package(ns.root),indent=2))
+    ap=argparse.ArgumentParser(description='Build a compact evidence bundle for PRs containing AI-assisted changes.'); ap.add_argument('root'); ap.add_argument('--format',choices=('json','markdown'),default='json'); ns=ap.parse_args(argv); data=package(ns.root); print(markdown(data) if ns.format=='markdown' else json.dumps(data,indent=2))
 if __name__=='__main__': main()

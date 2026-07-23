@@ -6,3 +6,8 @@ class CliTest(unittest.TestCase):
 
     def test_package(self):
         data=json.loads(self.run_cli('examples/pr')); self.assertEqual(len(data['evidence_files']),2)
+
+    def test_markdown_output(self):
+        out=self.run_cli('examples/pr','--format','markdown')
+        self.assertIn('## AI Change Evidence',out)
+        self.assertIn('| File | Short hash | Evidence lines |',out)

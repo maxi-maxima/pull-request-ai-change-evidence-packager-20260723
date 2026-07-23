@@ -12,6 +12,7 @@ AI code review and agentic engineering are trending, but teams still lack lightw
 
 ```bash
 python -m pull_request_ai_change_evidence_packager_20260723 examples/pr
+python -m pull_request_ai_change_evidence_packager_20260723 examples/pr --format markdown
 ```
 
 ## 示例
@@ -29,7 +30,6 @@ python -m unittest discover -s tests
 ## 路线图
 
 - Git diff input
-- Markdown PR comment output
 - GitHub Action wrapper
 
 ## 许可证
